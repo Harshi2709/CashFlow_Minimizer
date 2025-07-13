@@ -22,7 +22,7 @@ This project combines **data structures**, **graph algorithms**, and **web devel
 - 🧠 Cashflow optimization using the Ford-Fulkerson algorithm
 - 📊 Graph visualization using [vis.js](https://visjs.org/)
 - 💻 Responsive, user-friendly interface
-- 🎨 Stylish frontend with HTML, CSS, and Bootstrap
+- 🎨 Stylish frontend with HTML, CSS, and JavaScript
 
 ---
 
