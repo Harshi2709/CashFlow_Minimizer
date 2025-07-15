@@ -1,6 +1,9 @@
 html,
 body {
     height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #mynetwork {
@@ -18,30 +21,65 @@ body {
     align-content: center;
 }
 
-#mynetwork2{
+#mynetwork2 {
     width: 100%;
     height: 100%;
 }
 
-#container{
+#container {
     width: 100%;
-    height: 70%;
+    height: 60%;
     background-color: white;
     display: flex;
     margin: 0 auto;
 }
 
-#generate-graph{
-    margin:auto;
-    display:block;
+.container.mt-3 {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.btn {
+    font-weight: 500;
+}
+
+#generate-graph {
+    margin: auto;
+    display: block;
     margin-top: 18px;
 }
 
+#solve {
+    display: inline-block !important;
+    margin: 10px auto;
+    padding: 10px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
-#solve{
-    margin:auto;
-    display:block;
-    margin-top: 13px;
+#solve:hover {
+    background-color: #218838;
+}
+
+.text-center.my-3 {
+    margin-bottom: 60px;
+}
+
+@media (max-width: 768px) {
+    #mynetwork, #container2 {
+        width: 100%;
+        height: 300px;
+    }
+
+    #container {
+        flex-direction: column;
+        height: auto;
+    }
 }
 
 .footer {
@@ -49,7 +87,10 @@ body {
     left: 0;
     bottom: 0;
     width: 100%;
+    height: 40px;
     background-color: rgb(90, 88, 88);
     color: white;
     text-align: center;
+    line-height: 40px;
+    font-size: 14px;
 }
