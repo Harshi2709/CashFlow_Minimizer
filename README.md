@@ -4,6 +4,12 @@ An interactive web application to generate and optimize cashflow networks betwee
 
 ---
 
+## 🔗 Live Demo
+
+👉 [Click here to view the project live](https://harshi2709.github.io/CashFlow_Minimizer/)
+
+---
+
 ## 📌 Overview
 
 The **Cashflow Minimizer** allows users to:
@@ -49,4 +55,3 @@ The application uses the **Ford-Fulkerson method** to find the maximum flow (whi
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/Harshi2709/CashFlow_Minimizer.git
-
