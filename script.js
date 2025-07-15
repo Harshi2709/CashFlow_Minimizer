@@ -1,13 +1,16 @@
+let nodes = new vis.DataSet([]);
+let edges = new vis.DataSet([]);
+let curr_data = { nodes: nodes, edges: edges };
+
+let container, container2, network, network2;
+let temptext;
+
 onload = function () {
-    // create the network
-    var curr_data;
-    var container = document.getElementById('mynetwork');
-    var container2 = document.getElementById('mynetwork2');
-    var genNew = document.getElementById('generate-graph');
-    var solve = document.getElementById('solve');
-    var temptext = document.getElementById('temptext');
-    // initialise graph options
-    var options = {
+    container = document.getElementById('mynetwork');
+    container2 = document.getElementById('mynetwork2');
+    temptext = document.getElementById('temptext');
+
+    const options = {
         edges: {
             arrows: {
                 to: true
@@ -26,95 +29,103 @@ onload = function () {
             icon: {
                 face: 'FontAwesome',
                 code: '\uf183',
-                size: 50,  //50,
+                size: 50,
                 color: '#3b916e',
             }
         }
     };
-    // initialize the network
-    var network = new vis.Network(container);
-    network.setOptions(options);
-    var network2 = new vis.Network(container2);
-    network2.setOptions(options);
 
-    function createData() {
-        sz = Math.floor(Math.random() * 8) + 3;
-        nodes = [];
-        for (i = 1; i <= sz; i++) {
-            nodes.push({ id: i, label: "Person " + i })
-        }
-        nodes = new vis.DataSet(nodes);
+    network = new vis.Network(container, curr_data, options);
+    network2 = new vis.Network(container2, curr_data, options);
 
-        edges = [];
-        for (i = 1; i <= sz; i++) {
-            for (j = i + 1; j <= sz; j++) {
-                if (Math.random() > 0.5) {
-                    if (Math.random() > 0.5)
-                        edges.push({ from: i, to: j, label: String(Math.floor(Math.random() * 100) + 1) });
-                    else
-                        edges.push({ from: j, to: i, label: String(Math.floor(Math.random() * 100) + 1) });
-                }
-            }
-        }
-        data = {
-            nodes: nodes,
-            edges: edges
-        };
-        curr_data = data;
-    }
-
-    genNew.onclick = function () {
-        createData();
-        network.setData(curr_data);
-        temptext.style.display = "inline";
-        container2.style.display = "none";
+    document.getElementById('generate-graph').onclick = function () {
+        clearGraph();
     };
 
-    solve.onclick = function () {
+    document.getElementById('solve').onclick = function () {
         temptext.style.display = "none";
         container2.style.display = "inline";
-        solvedData = solveData();
-        network2.setData(solveData());
+        const solved = solveData();
+        network2.setData(solved);
     };
+};
 
-    function solveData() {
-        data = curr_data;
-        sz = data['nodes'].length;
-        vals = Array(sz).fill(0);
-        for (i = 0; i < data['edges'].length; i++) {
-            edge = data['edges'][i];
-            vals[edge['to'] - 1] += parseInt(edge['label']);
-            vals[edge['from'] - 1] -= parseInt(edge['label']);
-        }
-        for (i = 0; i < sz; i++)
-            console.log(vals[i]);
-        console.log('\n');
+function clearGraph() {
+    nodes.clear();
+    edges.clear();
+    curr_data = { nodes: nodes, edges: edges };
+    network.setData(curr_data);
+    temptext.style.display = "inline";
+    container2.style.display = "none";
+}
 
-        new_edges = [];
-        for (i = 0; i < sz; i++) {
-            if (vals[i] > 0) {
-                for (j = 0; j < sz && vals[i] > 0; j++) {
-                    if (vals[j] < 0) {
-                        if (vals[j] + vals[i] >= 0) {
-                            new_edges.push({ from: j + 1, to: i + 1, label: String(Math.abs(vals[j])) });
-                            vals[i] += vals[j];
-                            vals[j] = 0;
-                        } else {
-                            new_edges.push({ from: j + 1, to: i + 1, label: String(vals[i]) });
-                            vals[j] += vals[i];
-                            vals[i] = 0;
-                        }
+function addPerson() {
+    const personName = document.getElementById("personName").value.trim();
+    if (personName !== "") {
+        const newId = nodes.length + 1;
+        nodes.add({ id: newId, label: personName });
+        document.getElementById("personName").value = "";
+    }
+}
+
+function deletePerson() {
+    const id = parseInt(document.getElementById("personIdToDelete").value);
+    if (!isNaN(id)) {
+        nodes.remove({ id: id });
+        const remainingEdges = edges.get().filter(edge => edge.from !== id && edge.to !== id);
+        edges.clear();
+        edges.add(remainingEdges);
+        document.getElementById("personIdToDelete").value = "";
+    }
+}
+
+function addTransaction() {
+    const from = parseInt(document.getElementById("fromPerson").value);
+    const to = parseInt(document.getElementById("toPerson").value);
+    const amount = parseInt(document.getElementById("amount").value);
+
+    if (!isNaN(from) && !isNaN(to) && !isNaN(amount) && from !== to) {
+        edges.add({ from: from, to: to, label: String(amount) });
+        document.getElementById("fromPerson").value = "";
+        document.getElementById("toPerson").value = "";
+        document.getElementById("amount").value = "";
+    }
+
+    curr_data = { nodes: nodes, edges: edges };
+    network.setData(curr_data);
+}
+
+function solveData() {
+    const sz = nodes.length;
+    const vals = Array(sz).fill(0);
+    const dataEdges = edges.get();
+
+    for (const edge of dataEdges) {
+        vals[edge.to - 1] += parseInt(edge.label);
+        vals[edge.from - 1] -= parseInt(edge.label);
+    }
+
+    const new_edges = [];
+    for (let i = 0; i < sz; i++) {
+        if (vals[i] > 0) {
+            for (let j = 0; j < sz && vals[i] > 0; j++) {
+                if (vals[j] < 0) {
+                    if (vals[j] + vals[i] >= 0) {
+                        new_edges.push({ from: j + 1, to: i + 1, label: String(Math.abs(vals[j])) });
+                        vals[i] += vals[j];
+                        vals[j] = 0;
+                    } else {
+                        new_edges.push({ from: j + 1, to: i + 1, label: String(vals[i]) });
+                        vals[j] += vals[i];
+                        vals[i] = 0;
                     }
                 }
             }
         }
-
-        data = {
-            nodes: data['nodes'],
-            edges: new_edges
-        };
-        return data;
     }
 
-    genNew.click();
-};
+    return {
+        nodes: nodes,
+        edges: new_edges
+    };
+}
