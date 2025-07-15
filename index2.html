@@ -7,20 +7,41 @@
     <title>Cashflow Minimizer</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
     <script src="https://kit.fontawesome.com/5548f5ed00.js" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </head>
 
 <body>
-    <nav class="navbar navbar-light " style="font-size: 25px; font-family: sans-serif; background-color: whitesmoke;">
-
-        <class="d-inline-block align-top" alt="">
-            Cashflow Minimization 💵
-
+    <nav class="navbar navbar-light" style="font-size: 25px; font-family: sans-serif; background-color: whitesmoke;">
+        Cashflow Minimization 💵
     </nav>
+
+    <div class="container mt-3">
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                <label>Add Person</label>
+                <input type="text" id="personName" class="form-control mb-2" placeholder="e.g. Person 1">
+                <button class="btn btn-primary mb-2" onclick="addPerson()">Add</button>
+            </div>
+            <div class="col-auto">
+                <label>Delete Person (ID)</label>
+                <input type="number" id="personIdToDelete" class="form-control mb-2" placeholder="Person ID">
+                <button class="btn btn-danger mb-2" onclick="deletePerson()">Delete</button>
+            </div>
+            <div class="col-auto">
+                <label>Add Cashflow Transaction</label>
+                <div class="form-inline">
+                    <input type="number" class="form-control mr-2" id="fromPerson" placeholder="From ID">
+                    <input type="number" class="form-control mr-2" id="toPerson" placeholder="To ID">
+                    <input type="number" class="form-control mr-2" id="amount" placeholder="Amount">
+                    <button class="btn btn-warning" onclick="addTransaction()">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="container">
         <div id="mynetwork"></div>
         <div id="container2">
@@ -31,12 +52,11 @@
         </div>
     </div>
 
-    <div>
-        
+    <div class="text-center my-3">
         <button type="button" class="btn btn-danger" id="generate-graph">Get New Problem</button>
-        
         <button type="button" class="btn btn-success" id="solve">Solve</button>
     </div>
+
     <div class="footer">
         <p>Made by Harshitha Reddy</p>
     </div>
